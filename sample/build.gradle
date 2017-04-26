@@ -22,6 +22,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile rootProject.ext.dependencies["appcompat-v7"]
     testCompile 'junit:junit:4.12'
-    compile project(':lib-mWidget')
-    compile project(':lib-GirdEditView')
+    compile project(':GirdEditView')
 }
