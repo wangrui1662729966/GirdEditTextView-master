@@ -15,9 +15,9 @@
 		android:id="@+id/gev_input4"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-	    android:layout_marginTop="20dp"
-	    custom:bottom_line_margin="8dp"
-	    custom:max_length="4"
-	    custom:style="BelowLine"
-	    custom:text_color="@color/colorAccent"
-	    custom:type="normal"/>
+		android:layout_marginTop="20dp"
+		custom:bottom_line_margin="8dp"
+		custom:max_length="4"
+		custom:style="BelowLine"
+		custom:text_color="@color/colorAccent"
+		custom:type="normal"/>
