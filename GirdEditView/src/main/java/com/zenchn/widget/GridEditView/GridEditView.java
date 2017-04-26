@@ -2,6 +2,7 @@ package com.zenchn.widget.GridEditView;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ public class GridEditView extends RelativeLayout {
     private static final float DEFAULT_RADIUS_DP = 6.0f;
     private static final float DEFAULT_LINE_MARGIN_DP = 8.0f;
 
+    private LinearLayout llContainer;
     private EditText etInput;
     private TextView[] TextViews;
     private StringBuffer clipBoard;
@@ -49,7 +51,7 @@ public class GridEditView extends RelativeLayout {
 
     private int inputType;
     private Style style = Style.BelowLine;
-
+    private Context mContext;
 
     public GridEditView(Context context) {
         this(context, null);
@@ -131,67 +133,21 @@ public class GridEditView extends RelativeLayout {
         return inputType;
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        drawChildView(mContext);
+    }
+
     private void initViews(Context context) {
-
+        this.mContext = context;
         View.inflate(context, R.layout.widget_gird_editview, this);
-
-        LinearLayout llContainer = (LinearLayout) findViewById(R.id.ll_container);
+        llContainer = (LinearLayout) findViewById(R.id.ll_container);
         llContainer.setOrientation(LinearLayout.HORIZONTAL);
-        llContainer.setWeightSum(mMaxLength - 1);
-
-        TextViews = new TextView[mMaxLength];
-
-        for (int i = 0; i < mMaxLength; i++) {
-
-            TextView tv = getTextView(context, style);
-            TextViews[i] = tv;
-            llContainer.addView(tv);
-
-            if (i != mMaxLength - 1) {
-                View v = getDivideView(context);
-                llContainer.addView(v);
-            }
-
-        }
-
         etInput = (EditText) findViewById(R.id.et_input);
         etInput.setCursorVisible(false);//将光标隐藏
         etInput.requestFocus();
         setListener();
-    }
-
-    @NonNull
-    private View getDivideView(Context context) {
-        View divideView = new View(context);
-        divideView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
-        return divideView;
-    }
-
-    @NonNull
-    private TextView getTextView(Context context, Style style) {
-        TextView mTextView = new TextView(context);
-        mTextView.setTextSize(mTextSize);
-        mTextView.setTextColor(mTextColor);
-        mTextView.setEms(2);
-        mTextView.setInputType(inputType);
-
-        switch (style) {
-
-            case Background:
-            case EdgeFrame:
-                mTextView.setBackgroundDrawable(mBoxEmptyBackgroundDrawable);
-                break;
-
-            case BelowLine:
-                mBoxEmptyBottomLineDrawable.setBounds(0, 0, mBoxEmptyBottomLineDrawable.getMinimumWidth(), mBoxEmptyBottomLineDrawable.getMinimumHeight());
-                mTextView.setCompoundDrawablePadding(mBottomLineMarginPx);
-                mTextView.setCompoundDrawables(null, null, null, mBoxEmptyBottomLineDrawable);
-                break;
-
-        }
-        mTextView.setGravity(Gravity.CENTER);
-        mTextView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        return mTextView;
     }
 
     private void setListener() {
@@ -245,6 +201,57 @@ public class GridEditView extends RelativeLayout {
                 return false;
             }
         });
+    }
+
+    private void drawChildView(Context context) {
+        llContainer.setWeightSum(mMaxLength - 1);
+        TextViews = new TextView[mMaxLength];
+
+        for (int i = 0; i < mMaxLength; i++) {
+
+            TextView tv = getTextView(context, style);
+            TextViews[i] = tv;
+            llContainer.addView(tv);
+
+            if (i != mMaxLength - 1) {
+                View v = getDivideView(context);
+                llContainer.addView(v);
+            }
+        }
+    }
+
+    @NonNull
+    private View getDivideView(Context context) {
+        View divideView = new View(context);
+        divideView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+        return divideView;
+    }
+
+    @NonNull
+    private TextView getTextView(Context context, Style style) {
+        TextView mTextView = new TextView(context);
+        mTextView.setTextSize(mTextSize);
+        mTextView.setTextColor(mTextColor);
+        mTextView.setEms(2);
+        mTextView.setInputType(inputType);
+
+        switch (style) {
+
+            case Background:
+            case EdgeFrame:
+                mTextView.setBackgroundDrawable(mBoxEmptyBackgroundDrawable);
+                break;
+
+            case BelowLine:
+                mBoxEmptyBottomLineDrawable.setBounds(0, 0, mBoxEmptyBottomLineDrawable.getMinimumWidth(), mBoxEmptyBottomLineDrawable.getMinimumHeight());
+                mTextView.setCompoundDrawablePadding(mBottomLineMarginPx);
+                mTextView.setCompoundDrawables(null, null, null, mBoxEmptyBottomLineDrawable);
+                break;
+
+        }
+        mTextView.setGravity(Gravity.CENTER);
+        mTextView.setLayoutParams(new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        return mTextView;
     }
 
     /**
